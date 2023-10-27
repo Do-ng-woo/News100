@@ -32,7 +32,7 @@ jobs:
         python -m pip install --upgrade pip
     #파이썬 최신화
 
-     - name: Library Install
+    - name: install 
       run: |
         pip install requests
         pip install beautifulsoup4
