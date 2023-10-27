@@ -1,0 +1,77 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: 뉴스 속보 수집
+# 그냥 이름
+
+on:
+# 어떤 조건일때 파일을 실행 시킬지
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+#런 온: 어떤 서버를 사용할지
+    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        python-version: ["3.9", "3.10", "3.11"]
+#파이썬 버전은 지움 굳이 임
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    #이부분은 설정인데 굳이 안건들임
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+    #파이썬 최신화
+
+     - name: Library Install
+      run: |
+        pip install requests
+        pip install beautifulsoup4
+        pip install pandas
+        pip install lxml
+        
+    # 내가 만든 파이썬 파일을 실행
+    - name: run mu file
+      run: |
+        python3 news.py
+    # 커밋
+    - name: run mu file
+    run: |
+      git config --golbal user.email "2tiny2@naver.com
+      git config --global user.name "dongwoo"
+      git add data.csc
+      #이거 해줘야 가상환경 아니고 내 깃에 저장됨
+      git commit -m "뉴스데이터 수집"
+    #푸쉬
+    - name: push
+      uses: ad-m/github-push-action@master
+      #액션이라는 것을 마스터라는 브런치를 통해 하겠다
+      with:
+        branch: "main"
+        github_token : $
+        
+    
+
+      
+
+#플라스크 안써서 플라스크 관련부분 삭제
+#        python -m pip install flake8 pytest
+#        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+#    - name: Lint with flake8
+#     run: |
+#       # stop the build if there are Python syntax errors or undefined names
+#        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+#        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+#        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        pytest
